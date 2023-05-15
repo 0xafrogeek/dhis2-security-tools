@@ -1,0 +1,11 @@
+command:
+  # Check critical conf and log files
+  critical_files_permissions:
+    title: DHIS2 SA-ID OS-06 | Ensure correct permissions on critical Ubuntu configuration and log files
+    exec: |
+      sh -c 'test $(find /etc /var/log -type f -perm /137 -print | wc -l) -eq 0' && echo "All critical Ubuntu configuration and log files: correct permissions" || echo "Incorrect permissions found in critical Ubuntu configuration and log files"
+    exit-status: 0
+    stdout:
+      - "/.*correct permissions.*/"
+    meta:
+      failed: "Incorrect permissions found in critical Ubuntu configuration and log files. Permissions should be 660."

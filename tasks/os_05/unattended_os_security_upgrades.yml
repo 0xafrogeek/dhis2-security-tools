@@ -1,0 +1,8 @@
+command:
+  # Check Unattended upgrades of OS level security patches
+  unattended_upgrades_security:
+    title: DHIS2 SA-ID OS-05 | Ensure unattended upgrades of OS level security patches are enabled
+    exec: |
+      dpkg-query -W -f='${Status}\n' unattended-upgrades 2>/dev/null | grep -c "install ok installed" > /dev/null && \
+      grep -q "security" /etc/apt/apt.conf.d/50unattended-upgrades > /dev/null
+    exit-status: 0

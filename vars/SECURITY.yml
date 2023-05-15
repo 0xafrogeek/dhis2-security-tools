@@ -1,0 +1,8 @@
+---
+#### Goss vars ####
+goss_version:
+  release: v0.3.22
+  checksum: "sha256:634a9133b817deefdc5d1e5b812cc55e835ef20c9e16630ffc9034b009f4a856"
+goss_binary_path: /usr/local/bin/
+goss_binary: "{{ goss_binary_path }}goss"
+goss_binary_url: "https://github.com/aelsabbahy/goss/releases/download/{{ goss_version.release }}/goss-linux-amd64"

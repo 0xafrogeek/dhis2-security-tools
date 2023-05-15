@@ -1,0 +1,20 @@
+command:
+  /etc/ssh/ssh_host_pub_key_user:
+    title: DHIS2 SA-ID OS-04 | Ensure permissions on SSH pub host key files are configured correctly | user
+    exec: "userkeys=$(sudo find /etc/ssh/ -name *_key.pub -type f ! -user root ); echo $userkeys"
+    exit-status: 0
+    stdout: ["!/./"]
+
+  /etc/ssh/ssh_host_pub_key_group:
+    title: DHIS2 SA-ID OS-04 | Ensure permissions on SSH private host key files are configured correctly | group
+    exec: "groupkeys=$(sudo find /etc/ssh/ -name *_key.pub -type f ! -group root ); echo $groupkeys"
+    exit-status: 0
+    stdout: ["!/./"]
+
+  /etc/ssh/ssh_host_pub_key_perms:
+    title: DHIS2 SA-ID OS-04 | Ensure permissions on SSH private host key files are configured correctly | perms
+    exec: "keysperm=$(sudo find /etc/ssh/ -name *_key.pub -type f  -perm /137 ); echo $keyperms"
+    exit-status: 0
+    stdout: ["!/./"]
+    meta:
+      failed: "The permission of SSH private host key files is too permissive. It allows world read or write access."

@@ -1,0 +1,24 @@
+command:
+  # .ssh Directory Permission Check
+  ssh_directory_permissions:
+    title: DHIS2 SA-ID OS-02 | Ensure correct permissions on .ssh directory
+    exec: |
+      sh -c 'test $(stat -c "%a" ~/.ssh) = "700"' && echo "~/.ssh: correct permissions" || echo "~/.ssh: incorrect permissions"
+    exit-status: 0
+    stdout:
+      - "/.*correct permissions.*/"
+    meta:
+      failed: "The .ssh directory has incorrect permissions. Permission should be 700"
+
+  # SSH Key files Permission Check
+  ssh_keys_permissions:
+    title: DHIS2 SA-ID OS-02 | Ensure correct permissions on SSH key files
+    exec: |
+      rsa_keys=$(find ~/.ssh -name "id_rsa" -type f -exec sh -c 'test $(stat -c "%a" "{}") = "600"' \; -printf "%p: correct permissions\n" -o -printf "%p: incorrect permissions\n")
+      ed25519_keys=$(find ~/.ssh -name "id_ed25519" -type f -exec sh -c 'test $(stat -c "%a" "{}") = "600"' \; -printf "%p: correct permissions\n" -o -printf "%p: incorrect permissions\n")
+      printf "%s\n%s" "$rsa_keys" "$ed25519_keys"
+    exit-status: 0
+    stdout:
+      - "/.*correct permissions.*/"
+    meta:
+      failed: "One or more SSH key files in .ssh/ have incorrect/insecure permissions. Permission should be 600"

@@ -1,0 +1,63 @@
+gossfile:
+  # OS-01
+  tasks/os_01/*.yml: {}
+
+  # OS-02
+  # tasks/os_02/*.yml: {}
+
+  # OS-03
+  tasks/os_03/*.yml: {}
+
+  # OS-04
+  tasks/os_04/*.yml: {}
+
+  # OS-05
+  tasks/os_05/*.yml: {}
+
+  # OS-06
+  tasks/os_06/*.yml: {}
+
+  # # OS-07
+  # tasks/os_07/*.yml: {}
+
+  # # OS-08
+  # tasks/os_08/*.yml: {}
+
+  # # OS-09
+  # tasks/os_09/*.yml: {}
+
+  # # OS-10
+  # tasks/os_10/*.yml: {}
+
+  # # OS-11
+  # tasks/os_11/*.yml: {}
+
+  # # OS-12
+  # tasks/os_12/*.yml: {}
+
+  # AP-01
+  tasks/ap_01/*.yml: {}
+
+  # # DB-01
+  # tasks/db_01/*.yml: {}
+
+  # # DB-03
+  # tasks/db_03/*.yml: {}
+
+  # # DB-04
+  # tasks/db_04/*.yml: {}
+
+  # # DB-05
+  # tasks/db_05/*.yml: {}
+
+  # # DB-06
+  # tasks/db_06/*.yml: {}
+
+  # # DB-01
+  # tasks/db_08/*.yml: {}
+
+  # # DT-01
+  # tasks/dt_01/*.yml: {}
+
+  # # DT-02
+  # tasks/dt_02/*.yml: {}

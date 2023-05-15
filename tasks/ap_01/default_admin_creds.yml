@@ -1,0 +1,20 @@
+command:
+  check_dhis_admin_access:
+    title: DHIS2 SA-ID AP-01 | Check if DHIS2 admin access is disabled
+    exec: |
+      container_name=$(lxc list | awk '{print $2}' | grep -E '^(hmis|dhis)$' | head -1)
+      if [ "$container_name" = "hmis" ]; then
+        dhis_path="/hmis"
+      elif [ "$container_name" = "dhis" ]; then
+        dhis_path="/dhis"
+      else
+        echo "Unable to determine DHIS2 container name"
+        exit 1
+      fi
+      domain_name=$(lxc exec proxy -- sh -c 'if [ -f /etc/nginx/conf.d/*.conf ]; then grep -oP "(?<=server_name\s).*(?=;)" /etc/nginx/conf.d/*.conf; elif [ -f /etc/apache2/sites-enabled/apache-dhis2.conf ]; then grep -oP "(?<=ServerName\s).*$" /etc/apache2/sites-enabled/apache-dhis2.conf; fi')
+      curl -s -o /dev/null -w "%{http_code}" -H "Host: $domain_name" "https://$domain_name$dhis_path/dhis-web-commons/security/login.action" -u admin:district | grep -q 302
+    exit-status: 0
+    stdout:
+      - "/.*302.*/"
+    meta:
+      failed: "DHIS2 admin access is enabled with default credentials."
