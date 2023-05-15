@@ -1,0 +1,28 @@
+command:
+  check_cron_jobs:
+    title: DHIS2 SA-ID DB-01 | Ensure Regular Automated DHIS2 Database Backups are taken
+    exec: |
+      backup_cronjob=$(crontab -l | grep "backup")
+      dhis_cron=$(ls /etc/cron.d/dhis)
+
+      if [[ -n $backup_cronjob ]]; then
+        echo "Automated Backup cron job is enabled"
+      else
+        echo "Automated Backup cron job is not enabled"
+        exit 1
+      fi
+
+      if [[ -f $dhis_cron ]]; then
+        echo "DHIS2 Automated Database Backup cron job is enabled"
+      else
+        echo "DHIS cron job is not available"
+        exit 1
+      fi
+
+    exit-status: 0
+    stdout:
+      - "DHIS2 Automated Database Backup is enabled"
+      - "DHIS2 Automated Database Backup cron job is enabled"
+    meta:
+      failed: |
+        DHIS2 Automated Database Backup is not enabled
