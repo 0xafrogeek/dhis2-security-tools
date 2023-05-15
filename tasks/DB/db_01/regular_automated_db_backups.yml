@@ -2,27 +2,27 @@ command:
   check_cron_jobs:
     title: DHIS2 SA-ID DB-01 | Ensure Regular Automated DHIS2 Database Backups are taken
     exec: |
-      backup_cronjob=$(crontab -l | grep "backup")
-      dhis_cron=$(ls /etc/cron.d/dhis)
+      backup_cronjob=$(lxc exec postgres -- crontab -l | grep "backup")
+      dhis_cron=$(lxc exec postgres -- ls /etc/cron.d/dhis)
 
       if [[ -n $backup_cronjob ]]; then
-        echo "Automated Backup cron job is enabled"
+        echo "DHIS2 Automated Database Backup cron job is configured"
       else
-        echo "Automated Backup cron job is not enabled"
+        echo "DHIS2 Automated Backup cron job is not configured"
         exit 1
       fi
 
       if [[ -f $dhis_cron ]]; then
-        echo "DHIS2 Automated Database Backup cron job is enabled"
+        echo "DHIS2 Automated Database Backup cron job is configured"
       else
-        echo "DHIS cron job is not available"
+        echo "DHIS Automated Database Backup cron job is not configured"
         exit 1
       fi
 
     exit-status: 0
     stdout:
-      - "DHIS2 Automated Database Backup is enabled"
-      - "DHIS2 Automated Database Backup cron job is enabled"
+      - "DHIS2 Automated Database Backup is configured"
+      - "DHIS2 Automated Database Backup cron job is not configured"
     meta:
       failed: |
-        DHIS2 Automated Database Backup is not enabled
+        DHIS2 Automated Database Backup cron job is not configured or DHIS cron job is not configured
