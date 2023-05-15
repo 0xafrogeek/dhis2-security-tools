@@ -1,0 +1,25 @@
+command:
+  check_offsite_backup:
+    title: DHIS2 SA-ID DB-02 | Ensure Offsite Backups are taken
+    exec: |
+      # Search for all scripts in the crontab
+      cron_scripts=$(crontab -l | awk -F ' ' '{print $NF}')
+
+      # Iterate over the scripts and check their contents
+      for script in $cron_scripts; do
+        script_path=$(which $script)
+
+        # Comfirm the existence of the script and check for common backup tools
+        if [ -f "$script_path" ] && grep -q "rsync" "$script_path"; then
+          echo "Offsite backup script found: $script_path"
+          exit 0
+        fi
+      done
+
+      echo "Offsite Backup is not configured"
+      exit 1
+    exit-status: 0
+    stdout:
+      - "/Offsite Backup is configured: .*/"
+    meta:
+      failed: "Offsite Backup is not configured"
