@@ -1,6 +1,6 @@
 command:
   check_postgres_config_permission:
-    title: DHIS2 SA-ID DB-05 | Check PostgreSQL Config File Permission
+    title: DHIS2 SA-ID DB-05 | Check PostgreSQL Config Files Permission
     exec: |
       config_files=$(lxc exec postgres -- find /etc/postgresql -type f -name '*.conf')
       incorrect_files=""
