@@ -1,0 +1,22 @@
+command:
+  check_backup_encryption:
+    title: DHIS2 SA-ID DB-07 | Check Backup Encryption at rest
+    exec: |
+      backup_scripts=$(crontab -l | awk '{print $NF}')
+
+      for script in $backup_scripts; do
+        script_path=$(which $script)
+
+        # Check script and logic
+        if [ -f "$script_path" ] && grep -q "openssl.*cipher" "$script_path"; then
+          echo "Backup script with encryption found: $script_path"
+          exit 0
+        fi
+      done
+      echo "No backup script with encryption is configured"
+      exit 1
+    exit-status: 0
+    stdout:
+      - "/DHIS2 Database Backup files are being encrypted at rest: .*/"
+    meta:
+      failed: "DHIS2 Database Backup files are being encrypted at rest."
