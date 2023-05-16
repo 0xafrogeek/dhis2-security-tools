@@ -1,6 +1,6 @@
 command:
   check_dhis_admin_access:
-    title: DHIS2 SA-ID AP-01 | Check if DHIS2 admin access is disabled
+    title: DHIS2 SA-ID AP-01 | Ensure DHIS2 admin access is disabled
     exec: |
       container_name=$(lxc list | awk '{print $2}' | grep -E '^(hmis|dhis|tracker)$' | head -1)
       if [ "$container_name" = "hmis" ]; then
