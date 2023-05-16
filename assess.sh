@@ -193,7 +193,7 @@ if [ "$failed_count" = "0" ]; then
     echo "## Tests Passed: $((test_count - failed_count))"
     echo "## Tests Failed: $failed_count"
     echo "## Runtime Duration: $(echo "$duration / 1000000" | bc) seconds"
-    echo "## Full Security Assessment Report can be found in: $assessment_out"
+    echo "## Detailed Report of the Security Assessment can be found in: $assessment_out"
     echo
 else
     echo "## WARNING!!! - Some important Security Configurations are missing on your System. $failed_count out of $test_count tests failed. Please check report in: $assessment_out"
@@ -205,6 +205,6 @@ else
     echo "## Total Tests Run: $test_count"
     echo "## Total Tests Failed: $failed_count"
     echo "## Runtime Duration: $(echo "$duration / 1000000" | bc) seconds"
-    echo "## Detailed Report can be found in: $assessment_out"
+    echo "## Detailed Report of the Security Assessment can be found in: $assessment_out"
     echo
 fi
