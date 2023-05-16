@@ -202,4 +202,9 @@ else
     echo "----------------------------------------"
     jq -r '.results | map(select(.result != 0)) | .[] | "Test Title: " + .title, "Successful: " + (.successful | tostring)' $assessment_out
     echo
+    echo "## Total Tests Run: $test_count"
+    echo "## Total Tests Failed: $failed_count"
+    echo "## Runtime Duration: $(echo "$duration / 1000000" | bc) seconds"
+    echo "## Detailed Report can be found in: $assessment_out"
+    echo
 fi
