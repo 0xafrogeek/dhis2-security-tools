@@ -1,0 +1,44 @@
+command:
+  check_backup_file_perms:
+    title: DHIS2 SA-ID DB-07 | Check Backup Files Permissions
+    exec: |
+      backup_scripts=$(crontab -l | awk '{print $NF}')
+
+      for script in $backup_scripts; do
+        script_path=$(which $script)
+
+        # Check backup script and examine its content
+        if [ -f "$script_path" ]; then
+          backup_path=$(grep -Eo "backup_path\s*=\s*['\"]?([^'\"]+)" "$script_path" | awk -F= '{print $2}' | tr -d " '\"")
+
+          # Check if the backup path is local
+          if [ -n "$backup_path" ]; then
+            echo "Local backup file path: $backup_path"
+
+            # Check if the backup path exists and is a directory
+            if [ -d "$backup_path" ]; then
+              # Look for posgres backups
+              backup_files=$(find "$backup_path" -type f -name "*sql" -printf "%f\n")
+
+              for file in $backup_files; do
+                file_path="$backup_path/$file"
+
+                # Check perms
+                if [[ $(stat -c "%a" "$file_path") =~ ^(640|660)$ ]]; then
+                  echo "Backup file: $file_path"
+                else
+                  echo "Invalid permissions for backup file: $file_path"
+                fi
+              done
+            else
+              echo "Invalid or inaccessible local backup directory: $backup_path"
+            fi
+          fi
+        fi
+      done
+    exit-status: 0
+    stdout:
+      - "/Local backup file path: .*/"
+      - "/Backup file: .*/"
+    meta:
+      failed: "Local backup file paths or insecure backup permissions found"
