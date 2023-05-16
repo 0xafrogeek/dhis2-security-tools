@@ -1,16 +1,16 @@
 command:
   check_offsite_backup:
-    title: DHIS2 SA-ID DB-02 | Ensure Offsite Backups are taken
+    title: DHIS2 SA-ID DB-03 | Ensure Offsite Backups are taken
     exec: |
       # Search for all scripts in the crontab
-      cron_scripts=$(crontab -l | awk -F ' ' '{print $NF}')
+      cron_scripts=$(lxc exec postgres -- crontab -l | awk -F ' ' '{print $NF}')
 
-      # Iterate over the scripts and check their contents
+      # Iterate over the scripts and examine their content
       for script in $cron_scripts; do
-        script_path=$(which $script)
+        script_path=$(lxc exec postgres -- which $script)
 
-        # Comfirm the existence of the script and check for common backup tools
-        if [ -f "$script_path" ] && grep -q "rsync" "$script_path"; then
+        # Confirm the existence of the script and check for common backup tools
+        if [ -f "$script_path" ] && lxc exec postgres -- grep -q "rsync" "$script_path"; then
           echo "Offsite backup script found: $script_path"
           exit 0
         fi

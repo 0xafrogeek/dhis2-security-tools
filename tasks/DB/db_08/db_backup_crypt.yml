@@ -1,23 +1,23 @@
 command:
   check_backup_encryption:
-    title: DHIS2 SA-ID DB-07 | Ensure Backups are Encrypted at rest
+    title: DHIS2 SA-ID DB-08 | Ensure Backups are Encrypted
     exec: |
-      backup_scripts=$(crontab -l | awk '{print $NF}')
+      backup_scripts=$(lxc exec postgres -- crontab -l | awk '{print $NF}')
 
       for script in $backup_scripts; do
-        script_path=$(which $script)
+        script_path=$(lxc exec postgres -- which $script)
 
         # Check if the script exists and examine its contents
         if [ -f "$script_path" ]; then
-          backup_path=$(grep -Eo "backup_path\s*=\s*['\"]?([^'\"]+)" "$script_path" | awk -F= '{print $2}' | tr -d " '\"")
-          remote_storage=$(grep -Eo "remote_storage\s*=\s*['\"]?([^'\"]+)" "$script_path" | awk -F= '{print $2}' | tr -d " '\"")
+          backup_path=$(lxc exec postgres -- grep -Eo "backup_path\s*=\s*['\"]?([^'\"]+)" "$script_path" | awk -F= '{print $2}' | tr -d " '\"")
+          remote_storage=$(lxc exec postgres -- grep -Eo "remote_storage\s*=\s*['\"]?([^'\"]+)" "$script_path" | awk -F= '{print $2}' | tr -d " '\"")
 
           # Check if the backup path is local and if it is encrypted
           if [ -n "$backup_path" ]; then
-            if [ -f "$backup_path" ] && [[ $(stat -c "%a" "$backup_path") =~ ^(640|660)$ ]]; then
+            if [ "$(lxc exec postgres -- test -f "$backup_path" && echo $?)" -eq 0 ] && [[ "$(lxc exec postgres -- stat -c "%a" "$backup_path")" =~ ^(640|660)$ ]]; then
               echo "Local backup file path: $backup_path"
 
-              if grep -q "openssl.*cipher" "$script_path"; then
+              if lxc exec postgres -- grep -q "openssl.*cipher" "$script_path"; then
                 echo "Backups are being encrypted"
               else
                 echo "Backups are not being encrypted"
@@ -32,7 +32,7 @@ command:
             echo "Remote backup storage: $remote_storage"
 
             # Check if encryption is enabled
-            if grep -q "openssl.*cipher" "$script_path"; then
+            if lxc exec postgres -- grep -q "openssl.*cipher" "$script_path"; then
               echo "Backups are being encrypted"
             else
               echo "Backups are not being encrypted"
@@ -44,6 +44,6 @@ command:
     stdout:
       - "/Local backup file path: .*/"
       - "/Remote backup storage: .*/"
-      - "Encryption logic is included"
+      - "Backups are encrypted"
     meta:
-      failed: "Backup cron script paths or encryption logic not found"
+      failed: "Backups are not being encrypted"

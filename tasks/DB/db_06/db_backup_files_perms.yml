@@ -1,30 +1,30 @@
 command:
   check_backup_file_perms:
-    title: DHIS2 SA-ID DB-07 | Check Backup Files Permissions
+    title: DHIS2 SA-ID DB-06 | Ensure Backup Files have the correct Permissions
     exec: |
-      backup_scripts=$(crontab -l | awk '{print $NF}')
+      backup_scripts=$(lxc exec postgres -- crontab -l | awk '{print $NF}')
 
       for script in $backup_scripts; do
-        script_path=$(which $script)
+        script_path=$(lxc exec postgres -- which $script)
 
         # Check backup script and examine its content
         if [ -f "$script_path" ]; then
-          backup_path=$(grep -Eo "backup_path\s*=\s*['\"]?([^'\"]+)" "$script_path" | awk -F= '{print $2}' | tr -d " '\"")
+          backup_path=$(lxc exec postgres -- grep -Eo "backup_path\s*=\s*['\"]?([^'\"]+)" "$script_path" | awk -F= '{print $2}' | tr -d " '\"")
 
           # Check if the backup path is local
           if [ -n "$backup_path" ]; then
             echo "Local backup file path: $backup_path"
 
             # Check if the backup path exists and is a directory
-            if [ -d "$backup_path" ]; then
-              # Look for posgres backups
-              backup_files=$(find "$backup_path" -type f -name "*sql" -printf "%f\n")
+            if [ "$(lxc exec postgres -- test -d "$backup_path" && echo $?)" -eq 0 ]; then
+              # Look for postgres backups
+              backup_files=$(lxc exec postgres -- find "$backup_path" -type f -name "*sql" -printf "%f\n")
 
               for file in $backup_files; do
                 file_path="$backup_path/$file"
 
-                # Check perms
-                if [[ $(stat -c "%a" "$file_path") =~ ^(640|660)$ ]]; then
+                # Check permissions
+                if [[ "$(lxc exec postgres -- stat -c "%a" "$file_path")" =~ ^(640|660)$ ]]; then
                   echo "Backup file: $file_path"
                 else
                   echo "Invalid permissions for backup file: $file_path"
