@@ -1,0 +1,26 @@
+command:
+  check_postgres_config_permission:
+    title: DHIS2 SA-ID DB-05 | Check PostgreSQL Config File Permission
+    exec: |
+      config_files=$(lxc exec postgres -- find /etc/postgresql -type f -name '*.conf')
+      incorrect_files=""
+
+      for file in $config_files; do
+        permissions=$(lxc exec postgres -- stat -c "%a" "$file")
+        if [[ "$permissions" != "644" && "$permissions" != "640" && "$permissions" != "660" ]]; then
+          incorrect_files="$incorrect_files$file\n"
+        fi
+      done
+
+      if [ -n "$incorrect_files" ]; then
+        echo -e "Incorrect permission found for the following PostgreSQL config file(s):\n$incorrect_files"
+        exit 1
+      else
+        echo "All PostgreSQL config files have correct permission"
+      fi
+    exit-status: 0
+    stdout:
+      - "All PostgreSQL config files have correct permission"
+    meta:
+      failed: |
+        Incorrect permission found for PostgreSQL config file(s)
