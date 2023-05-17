@@ -4,17 +4,18 @@
 
 DHIS2 Security Tools is a tool built to ease and Automate Security/Compliance AUDIT of DHIS2 Instances based on the DHIS2 Security Assessment Checklist developed by the DHIS2 Security Team.
 
-- The tool will also enable Auditors to apply PATCHES to security holes or misconfigurations detected after audit in an automated and hassle-free fashion.
+- The tool will also enable Auditors to apply PATCHES to security holes or misconfigurations detected during audit in an automated and hassle-free fashion.
 - Incident Response for compromised DHIS2 instances will also be supported in the near future.
 
 ## Tools/Technologies Used
 
 - Ansible - For its flexibility
-- GO ([Goss](https://github.com/goss-org/goss/) Binary) - Leveraging [Goss](https://github.com/goss-org/goss/), a lighting fast [serverspec](http://serverspec.org/) alternative for testing/validating server configuration. Goss's highly extensible yaml based syntax similar to Ansible allow us to customize it to perform various kinds of tests/checks, ranging from Server to Application Security.
+- GO ([Goss](https://github.com/goss-org/goss/) Binary) - Leveraging [Goss](https://github.com/goss-org/goss/), a lighting fast [serverspec](http://serverspec.org/) alternative for testing/validating server configuration. Goss's highly extensible yaml based syntax similar to Ansible, allows us to customize it to perform various kinds of tests/validations, ranging from Server to Application Security.
 
 ## Dependencies
 
 - Ansible
+- Goss Binary
 - Python3
 - jq
 
