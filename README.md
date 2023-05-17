@@ -7,6 +7,12 @@ DHIS2 Security Tools is a tool built to ease and Automate Security/Compliance AU
 - The tool will also enable Auditors to apply PATCHES to security holes or misconfigurations detected during audit in an automated and hassle-free fashion.
 - Incident Response for compromised DHIS2 instances will also be supported in the near future.
 
+## TODO
+
+- [x] Security Audit Role
+- [ ] Security Patch Role
+- [ ] Incident Response Role
+
 ## Tools/Technologies Used
 
 - Ansible - For its flexibility
