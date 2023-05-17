@@ -2,12 +2,15 @@
 
 ## Purpose of the Tool
 
-DHIS2 Security Tools is a tool built to ease Security/Compliance Assessments/Audits of DHIS2 Instances through automation.
+DHIS2 Security Tools is a tool built to ease and Automate Security/Compliance AUDIT of DHIS2 Instances based on the DHIS2 Security Assessment Checklist developed by the DHIS2 Security Team.
 
-## Technologies Used
+- The tool will also enable Auditors to apply PATCHES to security holes or misconfigurations detected after audit in an automated and hassle-free fashion.
+- Incident Response for compromised DHIS2 instances will also be supported in the near future.
+
+## Tools/Technologies Used
 
 - Ansible - For its flexibility
-- GO ([Goss](https://github.com/goss-org/goss/) Binary) - Leverage [Goss](https://github.com/goss-org/goss/), a lighting fast [serverspec](http://serverspec.org/) alternative for testing/validating server configuration.
+- GO ([Goss](https://github.com/goss-org/goss/) Binary) - Leveraging [Goss](https://github.com/goss-org/goss/), a lighting fast [serverspec](http://serverspec.org/) alternative for testing/validating server configuration. Goss's highly extensible yaml based syntax similar to Ansible allow us to customize it to perform various kinds of tests/checks, ranging from Server to Application Security.
 
 ## Dependencies
 
@@ -29,7 +32,7 @@ git clone https://github.com/babouceesay/dhis2-security-tools.git
 cd dhis2-security-tools
 ```
 
-3. Execute assess.sh with sudo privileges. It will install dependenciess, run Security Assessement and generate report:
+3. Execute assess.sh with sudo privileges. It will install dependencies, run Security Assessement and generate report:
 
 ```sh
 sudo ./assess.sh
