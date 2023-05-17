@@ -1,0 +1,16 @@
+command:
+  check_resource_monitoring:
+    title: Ensure a resource monitoring took is installed
+    exec: |
+      container_name=$(lxc list | awk '{print $2}' | grep -E '^munin$')
+      output=$(lxc exec "$container_name" -- munin-node --version 2>&1)
+      if [[ "$output" == *"munin-node"* ]]; then
+        echo "Munin is installed."
+        exit 0
+      else
+        echo "Resource monitoring tool is installed."
+        exit 1
+      fi
+    exit-status: 0
+    meta:
+      failed: "Resource monitoring tool is not installed."
