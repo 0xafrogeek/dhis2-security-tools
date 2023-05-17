@@ -17,9 +17,23 @@ DHIS2 Security Tools is a tool built to ease Security/Compliance Assessments/Aud
 
 ## How to use DHIS2 Security Tools
 
-1. Clone this repository on your DHIS2 Server: git clone https://github.com/babouceesay/dhis2-security-tools.git
-2. Change directory into dhis2-security-tools: cd dhis2-security-tools
-3. Execute assess.sh with sudo privileges. It will install dependenciess, run Security Assessement and generate report: sudo ./assess.sh
+1. Clone this repository on your DHIS2 Server:
+
+```sh
+git clone https://github.com/babouceesay/dhis2-security-tools.git
+```
+
+2. Change directory into dhis2-security-tools:
+
+```sh
+cd dhis2-security-tools
+```
+
+3. Execute assess.sh with sudo privileges. It will install dependenciess, run Security Assessement and generate report:
+
+```sh
+sudo ./assess.sh
+```
 
 ## License
 
