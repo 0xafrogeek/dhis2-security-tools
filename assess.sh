@@ -1,5 +1,7 @@
 #! /bin/bash    
 
+set -e
+
 # Copy assessment content to /var/tmp
 cp -R * /var/tmp
 
@@ -72,11 +74,6 @@ install_ansible() {
     ansible-galaxy collection install community.general
 }
 
-configure_needrestart() {
-    sudo sed -i 's/#$nrconf{restart} = '"'"'i'"'"';/$nrconf{restart} = '"'"'a'"'"';/g' /etc/needrestart/needrestart.conf
-    sudo sed -i "s/#\$nrconf{kernelhints} = -1;/\$nrconf{kernelhints} = -1;/g" /etc/needrestart/needrestart.conf
-}
-
 # Check and install ansible if not installed
 if ! command -v ansible &> /dev/null; then
     configure_needrestart
@@ -86,6 +83,10 @@ fi
 # Check and install jq
 if ! command -v jq &> /dev/null; then
     sudo apt-get install $APT_OPTS jq
+fi
+
+if ! command -v curl &> /dev/null; then
+    sudo apt-get install $APT_OPTS curl
 fi
 
 # Check and install goss if not installed
