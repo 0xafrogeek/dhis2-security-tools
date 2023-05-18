@@ -24,6 +24,12 @@ DHIS2 Security Tools is a tool built to ease and Automate Security/Compliance AU
 - Goss Binary
 - Python3
 - jq
+- curl
+
+## Pre-requisites
+
+- Your DHIS2 instance should be running on one of the recommended DHIS2 Ubuntu Server releases: 20.X or 22.X
+- Your DHIS2 deployment should be one of the recommended secure DHIS2 deployments using ![Bob Tools](https://github.com/bobjolliffe/dhis2-tools-ng) or ![DHIS2 Server Tools](https://github.com/dhis2/dhis2-server-tools)
 
 ## How to use DHIS2 Security Tools
 
