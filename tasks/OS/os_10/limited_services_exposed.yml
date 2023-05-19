@@ -1,0 +1,19 @@
+command:
+  check_internet_exposed_services:
+    title: DHIS2 SA-ID OS-10 | Check if only limited/required Services are exposed to the internet
+    exec: |
+      allowed_services=("ssh" "http" "https")  # Add more allowed services if needed
+      exposed_services=$(ss -tuln | awk '{print $4}' | awk -F ":" '{print $NF}' | sort -u)
+
+      for service in $exposed_services; do
+        if ! [[ " ${allowed_services[*]} " =~ " ${service} " ]]; then
+          echo "Unexpected service exposed to the internet: $service"
+        fi
+      done
+
+      exit 0
+    exit-status: 0
+    stdout:
+      - "/Unexpected service exposed to the internet: .*/"
+    meta:
+      failed: "Unexpected service(s) exposed to the internet"

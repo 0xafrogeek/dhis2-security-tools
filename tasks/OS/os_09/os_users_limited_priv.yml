@@ -1,0 +1,19 @@
+command:
+  check_limited_privilege_users:
+    title: DHIS2 SA-ID OS-09 | Check if there are OS Users with Limited Privileges
+    exec: |
+      limited_users=$(awk -F: '$3 >= 1000 && $7 != "/sbin/nologin" && $7 != "/usr/sbin/nologin" {print $1}' /etc/passwd)
+
+      if [ -n "$limited_users" ]; then
+        echo "OS users with limited privileges found:"
+        echo "$limited_users"
+        exit 0
+      else
+        echo "No OS users with limited privileges found"
+        exit 1
+      fi
+    exit-status: 0
+    stdout:
+      - "OS users with limited privileges found:"
+    meta:
+      failed: "No OS users with limited privileges found"

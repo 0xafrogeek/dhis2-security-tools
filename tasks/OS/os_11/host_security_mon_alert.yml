@@ -1,0 +1,24 @@
+command:
+  check_security_monitoring:
+    title: DHIS2 SA-ID OS-11 | Check Host-Based Security Monitoring and Alerting
+    exec: |
+      if pgrep -x "ossec" >/dev/null; then
+        echo "OSSEC is running"
+        exit 0
+      elif pgrep -x "wazuh" >/dev/null; then
+        echo "Wazuh is running"
+        exit 0
+      elif pgrep -x "fail2ban-server" >/dev/null; then
+        echo "Fail2Ban is running"
+        exit 0
+      else
+        echo "No host-based security monitoring system (OSSEC, Wazuh, Fail2Ban) found"
+        exit 1
+      fi
+    exit-status: 0
+    stdout:
+      - "/OSSEC is running/"
+      - "/Wazuh is running/"
+      - "/Fail2Ban is running/"
+    meta:
+      failed: "No host-based security monitoring and alerting system (OSSEC, Wazuh, Fail2Ban) found"
