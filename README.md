@@ -53,7 +53,7 @@ sudo ./assess.sh
 
 ## DHIS2 Security Assessment Checklist - as of 2021
 
-![Alt Text](https://github.com/babouceesay/dhis2-security-tools/blob/main/images/DHIS2-SA.png)
+![Alt Text](https://github.com/babouceesay/dhis2-security-tools/blob/main/images/DHIS2-SA-2021.png)
 
 ## License
 
