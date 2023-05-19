@@ -66,7 +66,6 @@ install_ansible() {
 
 # Check and install ansible if not installed
 if ! command -v ansible &> /dev/null; then
-    configure_needrestart
     install_ansible
 fi
 
