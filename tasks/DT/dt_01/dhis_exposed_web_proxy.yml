@@ -1,0 +1,37 @@
+command:
+  check_dhis_web_proxy_exposure:
+    title: Check Tomcat9 Exposure
+    exec:
+      - |
+        container_name=$(lxc list --format csv --columns n | grep -E "dhis|tracker|hmis" | head -n 1)
+        proxy_container="proxy"
+
+        if lxc exec $proxy_container -- command -v nginx &>/dev/null; then
+          # Grab DHIS2 Application IP and check nginx conf
+          container_ip=$(lxc exec $container_name -- ip addr show eth0 | grep -Po 'inet \K[\d.]+')
+          if lxc exec $proxy_container -- grep -q "proxy_pass http://$container_ip:8080/$container_name;" /etc/nginx/conf.d/upstream/dhis2.conf; then
+            echo "DHIS2 Application or Tomcat in $container_name is exposed via Nginx reverse proxy"
+            exit 0
+          else
+            echo "DHIS2 Application or Tomcat in $container_name is not exposed via Nginx reverse proxy"
+            exit 1
+          fi
+        elif lxc exec $proxy_container -- command -v apache2 &>/dev/null; then
+          # Grab DHIS2 Application IP and check apache2 conf
+          if lxc exec $proxy_container -- grep -q "ProxyPassReverse http://$container_ip:8080/$container_name" /etc/apache2/upstream/$container_name; then
+            echo "Tomcat9 in $container_name is exposed via Apache2 reverse proxy"
+            exit 0
+          else
+            echo "DHIS2 Application or Tomcat in $container_name is insecurely, directly exposed to the internet"
+            exit 1
+          fi
+        else
+          echo "No web server (Nginx or Apache2) is installed in the proxy container"
+          exit 1
+        fi
+    exit-status: 0
+    stdout:
+      - "/DHIS2 Application or Tomcat in .+ is exposed via Nginx reverse proxy/"
+      - "/DHIS2 Application or Tomcat in .+ is exposed via Apache2 reverse proxy/"
+    meta:
+      failed: "DHIS2 Application or Tomcat is not exposed via a reverse proxy. It should only be exposed via a Reverse Proxy (Nginx or Apache2)"
