@@ -1,6 +1,6 @@
 command:
   ssh_permit_root:
-    title: DHIS2 SA-ID OS-01 | Ensure SSH root login is disabled
+    title: DHIS2 SA-ID OS-01 | Chec if SSH root login is disabled
     exec: grep -Ei "permitrootlogin" /etc/ssh/sshd_config
     exit-status:
       or:

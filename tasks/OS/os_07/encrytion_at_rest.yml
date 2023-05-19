@@ -1,0 +1,30 @@
+command:
+  check_disk_encryption:
+    title: DHIS2 SA-ID OS-07 | Check OS level Encryption at rest
+    exec: |
+      # Check if cryptsetup is installed
+      if ! dpkg -s cryptsetup >/dev/null 2>&1; then
+        echo "cryptsetup package is not installed"
+        exit 1
+      fi
+
+      # Check if crypttab file exists
+      if [ ! -f /etc/crypttab ]; then
+        echo "/etc/crypttab file does not exist"
+        exit 1
+      fi
+
+      # Check if fstab file contains encrypted partitions
+      if ! grep -E -q '^\s*/dev/mapper/.*\s+/.*\scrypt\s' /etc/fstab; then
+        echo "No encrypted partitions found in /etc/fstab"
+        exit 1
+      fi
+
+      echo "Encryption at rest is configured"
+      exit 0
+
+    exit-status: 0
+    stdout:
+      - "Encryption at rest is configured"
+    meta:
+      failed: "Encryption at rest is not configured"

@@ -1,6 +1,6 @@
 command:
   check_backup_file_perms:
-    title: DHIS2 SA-ID DB-06 | Ensure Backup Files have the correct Permissions
+    title: DHIS2 SA-ID DB-06 | Check if Database Backup Files have the correct Permissions
     exec: |
       backup_scripts=$(lxc exec postgres -- crontab -l | awk '{print $NF}')
 
