@@ -1,9 +1,7 @@
 #! /bin/bash    
 
-set -e
-
 # Copy assessment content to /var/tmp
-cp -R * /var/tmp
+cp -R ./* /var/tmp
 
 # help output
 Help()
@@ -44,49 +42,41 @@ done
 #### Pre-Checks
 
 # check whether script is run with sudo privileges
-if [ $(/usr/bin/id -u) -ne 0 ]; then
+if [ "$(/usr/bin/id -u)" -ne 0 ]; then
   echo "Script need to run with sudo privileges"
   exit 1
 fi
 
-#### Main Script ####
-
-## System variables captured for metadata
-host_os_locale=`date +%Z`
-host_os_name=`grep "^NAME=" /etc/os-release | cut -d '"' -f2 | sed 's/ //' | cut -d ' ' -f1`
-host_os_version=`grep "^VERSION_ID=" /etc/os-release | cut -d '"' -f2`
-
 
 # Command options
 export DEBIAN_FRONTEND=noninteractive
-RED='\033[0;31m'
 APT_OPTS='-qq -y'
 
 # Ansible install func
 install_ansible() {
-    sudo apt-get update $APT_OPTS
-    sudo apt-get upgrade $APT_OPTS
-    sudo apt-get install $APT_OPTS software-properties-common
+    sudo apt-get update "$APT_OPTS"
+    sudo apt-get upgrade "$APT_OPTS"
+    sudo apt-get install "$APT_OPTS" software-properties-common
     sudo apt-add-repository --yes --update ppa:ansible/ansible
-    sudo apt-get install $APT_OPTS ansible
-    sudo apt-get install $APT_OPTS python3-netaddr
-    sudo apt-get autoclean $APT_OPTS
+    sudo apt-get install "$APT_OPTS" ansible
+    sudo apt-get install "$APT_OPTS" python3-netaddr
+    sudo apt-get autoclean "$APT_OPTS"
     ansible-galaxy collection install community.general
 }
 
 # Check and install ansible if not installed
 if ! command -v ansible &> /dev/null; then
-    configure_needrestart
     install_ansible
 fi
 
 # Check and install jq
 if ! command -v jq &> /dev/null; then
-    sudo apt-get install $APT_OPTS jq
+    sudo apt-get install "$APT_OPTS" jq
 fi
 
+# Check and install curl
 if ! command -v curl &> /dev/null; then
-    sudo apt-get install $APT_OPTS curl
+    sudo apt-get install "$APT_OPTS" curl
 fi
 
 # Check and install goss if not installed
@@ -141,7 +131,7 @@ else
 fi
 
 
-if [ `echo $FAILURE` != 0 ]; then
+if [ $(echo $FAILURE) != 0 ]; then
    echo "## Pre-assessment checks failed, please see output."
    exit 1
 else
@@ -151,7 +141,6 @@ else
 fi
 
 
-output_summary="tail -2 $assessment_out"
 format_output="-f $format"
 
 if [ $format = json ]; then
@@ -168,9 +157,6 @@ fi
 # Run Security assessment
 $GOSS_BINARY -g $assessment_content_dir/$GOSS_FILE --vars $assessment_vars v $format_output > $assessment_out
 
-
-# Get summary from Goss output
-summary=$(jq -r '.summary' $assessment_out)
 
 # Get key attr from Goss summary
 duration=$(jq -r '.summary."total-duration"' $assessment_out)
@@ -194,7 +180,7 @@ if [ "$failed_count" = "0" ]; then
     echo "## Tests Passed: $((test_count - failed_count))"
     echo "## Tests Failed: $failed_count"
     echo "## Runtime Duration: $(echo "$duration / 1000000" | bc) seconds"
-    echo "## Detailed Report of the Security Assessment can be found in: $assessment_out"
+    echo "## Detailed Security Assessment Report can be found in: $assessment_out"
     echo
 else
     echo "## WARNING!!! - Some important Security Configurations are missing on your System. $failed_count out of $test_count tests failed. Please check report in: $assessment_out"
@@ -206,6 +192,6 @@ else
     echo "## Total Tests Run: $test_count"
     echo "## Total Tests Failed: $failed_count"
     echo "## Runtime Duration: $(echo "$duration / 1000000" | bc) seconds"
-    echo "## Detailed Report of the Security Assessment can be found in: $assessment_out"
+    echo "## Detailed Report can be found in: $assessment_out"
     echo
 fi
