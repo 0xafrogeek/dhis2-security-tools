@@ -1,6 +1,6 @@
 command:
   check_offsite_backup:
-    title: DHIS2 SA-ID DB-03 | Ensure Offsite Backups are taken
+    title: DHIS2 SA-ID DB-03 | Check if Offsite Backups are taken
     exec: |
       # Search for all scripts in the crontab
       cron_scripts=$(lxc exec postgres -- crontab -l | awk -F ' ' '{print $NF}')

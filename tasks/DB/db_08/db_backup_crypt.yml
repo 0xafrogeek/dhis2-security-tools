@@ -1,6 +1,6 @@
 command:
   check_backup_encryption:
-    title: DHIS2 SA-ID DB-08 | Ensure Backups are Encrypted
+    title: DHIS2 SA-ID DB-08 | Check if Database Backups are Encrypted
     exec: |
       backup_scripts=$(lxc exec postgres -- crontab -l | awk '{print $NF}')
 
@@ -46,4 +46,4 @@ command:
       - "/Remote backup storage: .*/"
       - "Backups are encrypted"
     meta:
-      failed: "Backups are not being encrypted"
+      failed: "Database Backups are not being encrypted"

@@ -1,6 +1,6 @@
 command:
   check_resource_monitoring:
-    title: DHIS2 SA-ID OS-05 | Ensure a resource monitoring tool is installed
+    title: DHIS2 SA-ID OS-08 | Check for availabilty of resource monitoring tool/s
     exec: |
       container_name=$(lxc list | awk '{print $2}' | grep -E '^munin$')
       output=$(lxc exec "$container_name" -- munin-node --version 2>&1)
