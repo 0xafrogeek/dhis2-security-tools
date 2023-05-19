@@ -2,7 +2,7 @@ command:
   check_database_users:
     title: DHIS2 SA-ID DB-04 | Check if Database uers have limited privileges
     exec: |
-      limited_users=$(lxc exec postgres -- psql -t -U postgres -c "SELECT usename FROM pg_catalog.pg_user WHERE usesuper='f' AND usecreatedb='f' AND usesuper='f'")
+      limited_users=$(lxc exec postgres -- psql -t postgres -c "SELECT usename FROM pg_catalog.pg_user WHERE usesuper='f' AND usecreatedb='f' AND usesuper='f'")
       if [ -n "$limited_users" ]; then
         echo "Database users with limited privileges found:"
         echo "$limited_users"
