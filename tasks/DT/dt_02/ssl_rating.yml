@@ -1,30 +1,33 @@
 command:
   check_ssl_rating:
-    title: DHIS2 SA-ID DT-02 | Check if SSL Rating is atleast A
+    title: DHIS2 SA-ID DT-02 | Check if SSL Rating is at least A
     exec: |
-      if command -v nginx &> /dev/null; then
-        # Get domain from Nginx conf
-        domain=$(grep -Po "(?<=server_name\s).*$" /etc/nginx/conf.d/*.conf | head -n 1)
-        port="443"
-      elif command -v apache2 &> /dev/null; then
-        # Get domain from Apache2 conf
-        domain=$(grep -oP "(?<=ServerName\s).*$" /etc/apache2/sites-enabled/apache-dhis2.conf | head -n 1)
-        port="443"
-      else
-        echo "Neither nginx nor apache2 is installed"
-        exit 1
-      fi
+      container_name="proxy"
+      lxc exec $container_name -- bash -c '
+        if command -v nginx &> /dev/null; then
+          # Get domain from Nginx conf
+          domain=$(grep -Po "(?<=server_name\s).*$" /etc/nginx/conf.d/*.conf | head -n 1)
+          port="443"
+        elif command -v apache2 &> /dev/null; then
+          # Get domain from Apache2 conf
+          domain=$(grep -oP "(?<=ServerName\s).*$" /etc/apache2/sites-enabled/apache-dhis2.conf | head -n 1)
+          port="443"
+        else
+          echo "Neither nginx nor apache2 is installed"
+          exit 1
+        fi
 
-      # Check SSL certificate
-      ssl_rating=$(echo | openssl s_client -connect "$domain:$port" -servername "$domain" 2>/dev/null | openssl x509 -text -noout | grep -E "Subject:|SSL-Session:" | tr -d '\n')
+        # Check SSL certificate
+        ssl_rating=$(echo | openssl s_client -connect "$domain:$port" -servername "$domain" 2>/dev/null | openssl x509 -text -noout | grep -E "Subject:|SSL-Session:" | tr -d '\n')
 
-      if [[ $ssl_rating =~ "SSL-Session:" ]]; then
-        echo "SSL rating for $domain is at least A"
-        exit 0
-      else
-        echo "SSL rating for $domain is less than A"
-        exit 1
-      fi
+        if [[ $ssl_rating =~ "SSL-Session:" ]]; then
+          echo "SSL rating for $domain is at least A"
+          exit 0
+        else
+          echo "SSL rating for $domain is less than A"
+          exit 1
+        fi
+      '
     exit-status: 0
     stdout:
       - "/SSL rating for .+ is at least A/"

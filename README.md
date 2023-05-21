@@ -16,7 +16,7 @@ DHIS2 Security Tools is a tool built to ease and Automate Security/Compliance AU
 ## Tools/Technologies Used
 
 - Ansible - For its flexibility
-- GO ([Goss](https://github.com/goss-org/goss/) Binary) - Leveraging [Goss](https://github.com/goss-org/goss/), a lighting fast [serverspec](http://serverspec.org/) alternative for testing/validating server configuration. Goss's highly extensible yaml based syntax similar to Ansible, allows us to customize it to perform various kinds of tests/validations, ranging from Server to Application Security.
+- GO ([Goss](https://github.com/goss-org/goss/) Binary) - Leveraging [Goss](https://github.com/goss-org/goss/), a lightning fast [serverspec](http://serverspec.org/) alternative for testing/validating server configuration. Goss's highly extensible yaml based syntax similar to Ansible, allows us to customize it to perform various kinds of tests/validations, ranging from Server to Application Security.
 
 ## Dependencies
 

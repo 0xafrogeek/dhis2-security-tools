@@ -9,4 +9,7 @@ gossfile:
   tasks/AP/*/*.yml: {}
 
   # DT
-  # tasks/DT/*/*.yml: {}
+  tasks/DT/dt_02/*.yml: {}
+
+  # VULN
+  tasks/VULN/*.yml:

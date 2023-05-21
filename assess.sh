@@ -1,4 +1,4 @@
-#! /bin/bash    
+#!/bin/bash
 
 # Copy assessment content to /var/tmp
 cp -R ./* /var/tmp
@@ -20,7 +20,6 @@ Help()
    echo
 }
 
-
 ## option statement
 while getopts f:g:o:v::h option; do
    case "${option}" in
@@ -38,15 +37,13 @@ while getopts f:g:o:v::h option; do
   esac
 done
 
-
 #### Pre-Checks
 
 # check whether script is run with sudo privileges
 if [ "$(/usr/bin/id -u)" -ne 0 ]; then
-  echo "Script need to run with sudo privileges"
+  echo "Script needs to run with sudo privileges"
   exit 1
 fi
-
 
 # Command options
 export DEBIAN_FRONTEND=noninteractive
@@ -66,6 +63,7 @@ install_ansible() {
 
 # Check and install ansible if not installed
 if ! command -v ansible &> /dev/null; then
+    configure_needrestart
     install_ansible
 fi
 
@@ -83,7 +81,7 @@ fi
 if ! command -v goss &> /dev/null; then
     GOSS_VERSION="0.3.22"
     echo
-    echo ## Download and configure Goss
+    echo "## Download and configure Goss"
     curl -L "https://github.com/aelsabbahy/goss/releases/download/v${GOSS_VERSION}/goss-linux-amd64" -o /usr/local/bin/goss
     curl -L "https://github.com/aelsabbahy/goss/releases/download/v${GOSS_VERSION}/goss-linux-amd64.sha256" -o /tmp/sha256sum.txt
 
@@ -103,7 +101,6 @@ if ! command -v goss &> /dev/null; then
         sudo chmod 0700 /usr/local/bin/goss
     fi
 fi
-
 
 # Set variables
 assessment_content_dir=/var/tmp
@@ -125,11 +122,10 @@ else
 fi
 
 if [ ! -f "$assessment_content_dir/$GOSS_FILE" ]; then
-   echo "ERROR:  Goss file was not found at $assessment_content_dir/$GOSS_FILE"; export FAILURE=2
+   echo "ERROR: Goss file was not found at $assessment_content_dir/$GOSS_FILE"; export FAILURE=2
 else
    echo "OK: Goss file found at $assessment_content_dir/$GOSS_FILE."
 fi
-
 
 if [ $(echo $FAILURE) != 0 ]; then
    echo "## Pre-assessment checks failed, please see output."
@@ -140,23 +136,21 @@ else
    echo
 fi
 
-
 format_output="-f $format"
 
 if [ $format = json ]; then
    format_output="-f json -o pretty"
 fi
 
-    ## Security Assessment starts
-    echo "###########################"
-    echo "SECURITY ASSESSMENT Started"
-    echo "###########################"
-    echo
-    echo
+## Security Assessment starts
+echo "###########################"
+echo "SECURITY ASSESSMENT Started"
+echo "###########################"
+echo
+echo
 
 # Run Security assessment
 $GOSS_BINARY -g $assessment_content_dir/$GOSS_FILE --vars $assessment_vars v $format_output > $assessment_out
-
 
 # Get key attr from Goss summary
 duration=$(jq -r '.summary."total-duration"' $assessment_out)

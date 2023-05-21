@@ -1,0 +1,38 @@
+command:
+  check_dhis_vulnerability:
+    title: Custom Check | Check if current DHIS2 version is Vulnerability
+    exec: |
+      container_name=$(lxc list | awk '{print $2}' | grep -E '^(hmis|dhis|tracker)$' | head -1)
+      dhis2_version=$(lxc exec "$container_name" -- cat /var/lib/tomcat9/webapps/$container_name/META-INF/maven/org.hisp.dhis/dhis-web-commons-resources/pom.properties | grep -oP "(?<=version=).*$" | head -1)
+
+      cve_file="/vars/cves.json"
+
+      if [[ -f "$cve_file" ]]; then
+        is_vulnerable=false
+        patched_version=""
+
+        affected_versions=$(jq -r ".cves[] | select(.affectedVersions | contains([\"$dhis2_version\"])) | .affectedVersions[]" "$cve_file")
+
+        if [[ -n "$affected_versions" ]]; then
+          is_vulnerable=true
+          patched_version=$(jq -r ".cves[] | select(.cveID != null) | select(.affectedVersions | contains([\"$dhis2_version\"])) | .patchedVersions[]" "$cve_file")
+        fi
+
+        if [[ "$is_vulnerable" == true ]]; then
+          echo "Your current DHIS2 version $dhis2_version is vulnerable."
+          echo "Please update to Patched version: $patched_version"
+          exit 1
+        else
+          echo "Your current DHIS2 version $dhis2_version is not vulnerable."
+          exit 0
+        fi
+      else
+        echo "CVE file $cve_file not found."
+        exit 1
+      fi
+    exit-status: 0
+    stdout:
+      - "Your current DHIS2 version .* is .*."
+    meta:
+      failed: "Your current DHIS2 version $dhis2_version is vulnerable. Please update to Patched version: $patched_version"
+      success: "Your current DHIS2 version $dhis2_version is not vulnerable."
