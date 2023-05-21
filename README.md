@@ -51,6 +51,14 @@ cd dhis2-security-tools
 sudo ./assess.sh
 ```
 
+## Example 1: Successful Assessment Report Summary
+
+![Alt Text](https://github.com/babouceesay/dhis2-security-tools/blob/main/images/success_summary.png)
+
+## Example 2: Portion of the full JSON Report of a Successful Assessment
+
+![Alt Text](https://github.com/babouceesay/dhis2-security-tools/blob/main/images/success_full_report.png)
+
 ## DHIS2 Security Assessment Checklist - as of 2021
 
 ![Alt Text](https://github.com/babouceesay/dhis2-security-tools/blob/main/images/DHIS2-SA-2021.png)
