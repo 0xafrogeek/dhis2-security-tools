@@ -19,7 +19,7 @@
       "patchedVersions": ["2.37.9.1", "2.38.3.1", "2.39.1.2"]
     },
     {
-      "cveID": "CVE-2022-41947",
+      "cveID": "CVE-2022-41949",
       "vulnerability": "Semi-blind SSRF",
       "advisoryUrl": "https://github.com/dhis2/dhis2-core/security/advisories/GHSA-6qh9-rxc8-7943",
       "affectedVersions": ["2.34", "2.35", "2.36", "2.37", "2.38", "2.39"],
