@@ -186,6 +186,6 @@ else
     echo "## Total Tests Run: $test_count"
     echo "## Total Tests Failed: $failed_count"
     echo "## Runtime Duration: $(echo "$duration / 1000000" | bc) seconds"
-    echo "## Detailed Report can be found in: $assessment_out"
+    echo "## Detailed Security Assessment Report can be found in: $assessment_out"
     echo
 fi
